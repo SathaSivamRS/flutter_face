@@ -8,6 +8,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // 🔴 Force logout to always start from the login page
+  await FirebaseAuth.instance.signOut();
+
   runApp(const MyApp());
 }
 
@@ -20,16 +24,8 @@ class MyApp extends StatelessWidget {
       title: 'Your App',
       theme: ThemeData(primarySwatch: Colors.blue),
       debugShowCheckedModeBanner: false,
-      home: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return const HomePage();
-          } else {
-            return const LoginScreen();
-          }
-        },
-      ),
+      home: const LoginScreen(), // ✅ Always start from Login
     );
+    // print("User: ${FirebaseAuth.instance.currentUser}");
   }
 }
